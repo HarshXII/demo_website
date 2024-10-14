@@ -65,6 +65,19 @@
             padding: 20px;
             border: none;
         }
+
+        /* Style for snapshot and avatar info */
+        #avatarSnapshot {
+            display: none;
+            margin-top: 20px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #snapshot-container {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -89,8 +102,8 @@
         <ul>
             <li>Click the "Open Ready Player Me" button.</li>
             <li>Create an avatar and click the "Done" button when you're done customizing.</li>
-            <li>After creation, this parent page receives the URL to the avatar.</li>
-            <li>The Ready Player Me window closes and the URL is displayed.</li>
+            <li>After creation, this parent page receives the URL to the avatar and captures a snapshot.</li>
+            <li>The Ready Player Me window closes and the URL and snapshot are displayed.</li>
         </ul>
         <p class="warning">
             If you have a subdomain, replace the 'demo' subdomain in the iframe source URL with yours.
@@ -100,6 +113,13 @@
         <p id="avatarUrl">Avatar URL:</p>
 
         <iframe id="frame" class="frame" allow="camera *; microphone *; clipboard-write" hidden></iframe>
+
+        <!-- Snapshot of the avatar -->
+        <div id="snapshot-container">
+            <h3>Avatar Snapshot:</h3>
+            <img id="avatarSnapshot" alt="Avatar Snapshot" />
+            <a id="downloadLink" download="avatar_snapshot.png">Download Snapshot</a>
+        </div>
     </div>
 
     <footer>
@@ -129,6 +149,9 @@
 
         const subdomain = 'demo'; // Replace with your custom subdomain
         const frame = document.getElementById('frame');
+        const snapshotImg = document.getElementById('avatarSnapshot');
+        const downloadLink = document.getElementById('downloadLink');
+        const snapshotContainer = document.getElementById('snapshot-container');
 
         frame.src = `https://${subdomain}.readyplayer.me/avatar?frameApi`;
 
@@ -154,11 +177,14 @@
                 );
             }
 
-            // Get avatar GLB URL
+            // Get avatar GLB URL and capture snapshot
             if (json.eventName === 'v1.avatar.exported') {
                 console.log(`Avatar URL: ${json.data.url}`);
                 document.getElementById('avatarUrl').innerHTML = `Avatar URL: ${json.data.url}`;
                 document.getElementById('frame').hidden = true;
+
+                // Create avatar snapshot
+                captureSnapshot(json.data.url);
             }
 
             // Get user id
@@ -177,6 +203,32 @@
 
         function displayIframe() {
             document.getElementById('frame').hidden = false;
+        }
+
+        function captureSnapshot(avatarUrl) {
+            // Create an image element to load the avatar GLB (or display model)
+            const img = new Image();
+            img.crossOrigin = 'anonymous';  // To avoid CORS issues
+            img.src = avatarUrl;
+
+            img.onload = function () {
+                // Create a canvas to draw the image
+                const canvas = document.createElement('canvas');
+                canvas.width = 512; // Set desired width
+                canvas.height = 512; // Set desired height
+                const context = canvas.getContext('2d');
+                context.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                // Convert canvas to PNG
+                const snapshotURL = canvas.toDataURL('image/png');
+                snapshotImg.src = snapshotURL;
+                snapshotContainer.style.display = 'block';
+                snapshotImg.style.display = 'block';
+
+                // Set the download link for the snapshot
+                downloadLink.href = snapshotURL;
+                downloadLink.style.display = 'inline-block';
+            };
         }
     </script>
 

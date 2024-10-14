@@ -10,6 +10,7 @@
             text-align: center;
             background-color: #f0f0f0;
             padding: 20px;
+            margin: 0;
         }
 
         nav ul {
@@ -54,6 +55,15 @@
             margin-top: 50px;
             font-size: 14px;
             color: #999;
+        }
+
+        /* Make iframe responsive and fullscreen with padding */
+        .frame {
+            width: calc(100% - 40px); /* Full width with 20px padding on each side */
+            height: calc(100vh - 40px); /* Full height with 20px padding on top and bottom */
+            margin: 0;
+            padding: 20px;
+            border: none;
         }
     </style>
 </head>
@@ -132,7 +142,7 @@
                 return;
             }
 
-            // Susbribe to all events sent from Ready Player Me once frame is ready
+            // Subscribe to all events sent from Ready Player Me once frame is ready
             if (json.eventName === 'v1.frame.ready') {
                 frame.contentWindow.postMessage(
                     JSON.stringify({

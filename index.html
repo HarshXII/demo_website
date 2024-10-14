@@ -9,16 +9,45 @@
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: #f0f0f0;
-            padding: 50px;
+            padding: 20px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
+        }
+
+        nav ul li a.active {
+            background-color: #0056b3;
+        }
+
+        .tabcontent {
+            display: none;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        #Home {
+            display: block; /* Show Home by default */
         }
 
         h1 {
             color: #007BFF;
-        }
-
-        p {
-            font-size: 18px;
-            color: #555;
         }
 
         footer {
@@ -30,13 +59,52 @@
 </head>
 <body>
 
-    <h1>Welcome to the Demo Website</h1>
-    <p>This is a demo website for testing features.</p>
-    <p>You can use this space to test various integrations or web features.</p>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#home" class="active" onclick="openTab(event, 'Home')">Home</a></li>
+                <li><a href="#readyplayerme" onclick="openTab(event, 'ReadyPlayerMe')">ReadyPlayerMe</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="Home" class="tabcontent">
+        <h1>Welcome to the Demo Website</h1>
+        <p>This is a demo website for testing features.</p>
+        <p>You can use this space to test various integrations or web features.</p>
+    </div>
+
+    <div id="ReadyPlayerMe" class="tabcontent">
+        <h1>ReadyPlayerMe Tab</h1>
+        <p>We will integrate the ReadyPlayerMe functionality here in the next step.</p>
+    </div>
 
     <footer>
         &copy; 2024 Demo Website. All rights reserved.
     </footer>
 
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+
+            // Hide all tab content
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Remove active class from all links
+            tablinks = document.getElementsByTagName("a");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show the current tab and add the active class
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
+
 </body>
 </html>
+

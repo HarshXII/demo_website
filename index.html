@@ -183,8 +183,9 @@
                 document.getElementById('avatarUrl').innerHTML = `Avatar URL: ${json.data.url}`;
                 document.getElementById('frame').hidden = true;
 
-                // Create avatar snapshot
-                captureSnapshot(json.data.url);
+                // Try using a PNG image URL if available
+                const avatarImageUrl = json.data.url.replace('.glb', '.png'); // Assuming Ready Player Me provides PNG fallback
+                captureSnapshot(avatarImageUrl);
             }
 
             // Get user id
@@ -205,11 +206,11 @@
             document.getElementById('frame').hidden = false;
         }
 
-        function captureSnapshot(avatarUrl) {
-            // Create an image element to load the avatar GLB (or display model)
+        function captureSnapshot(avatarImageUrl) {
+            // Create an image element to load the avatar PNG (assuming it's a valid URL)
             const img = new Image();
             img.crossOrigin = 'anonymous';  // To avoid CORS issues
-            img.src = avatarUrl;
+            img.src = avatarImageUrl;
 
             img.onload = function () {
                 // Create a canvas to draw the image
@@ -228,6 +229,10 @@
                 // Set the download link for the snapshot
                 downloadLink.href = snapshotURL;
                 downloadLink.style.display = 'inline-block';
+            };
+
+            img.onerror = function () {
+                console.error('Failed to load avatar image');
             };
         }
     </script>
